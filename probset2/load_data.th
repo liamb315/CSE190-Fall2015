@@ -1,3 +1,5 @@
+-- https://github.com/torch/demos/tree/master/train-a-digit-classifier
+
 require 'torch'
 require 'paths'
 
