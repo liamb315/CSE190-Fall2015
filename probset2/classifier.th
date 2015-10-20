@@ -1,0 +1,24 @@
+require 'torch'
+require 'nn'
+
+-- Declare the network using nn modules
+net = nn.Sequential()
+net:add(nn.Linear(785,256))
+net:add(nn.Linear(256, 10)) --10 output for the classifier
+net:add(nn.LogSoftMax())     -- Log-probability output 
+
+input  = torch.rand(1, 785)
+output = net:forward(input)
+print(output)
+
+
+-- Loss criterion
+criterion = nn.ClassNLLCriterion() -- Negative log-likelihood criterion
+criterion:forward(output, 3)
+gradients = criterion:backward(output, 3)
+
+gradInput = net:backward(input, gradients)
+
+
+-- Load data
+trainset = torch.load()
