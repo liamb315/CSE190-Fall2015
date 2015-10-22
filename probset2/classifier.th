@@ -2,6 +2,7 @@
 
 require 'torch'
 require 'nn'
+require 'load_data'
 
 -- Declare the network using nn modules
 net = nn.Sequential()
@@ -22,5 +23,5 @@ gradients = criterion:backward(output, 3)
 gradInput = net:backward(input, gradients)
 
 
--- Load data
-trainset = torch.load()
+-- Load data and normalize
+trainset = mnist.loadTrainSet()
