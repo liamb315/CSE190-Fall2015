@@ -1,27 +1,40 @@
 -- https://github.com/soumith/cvpr2015/blob/master/Deep%20Learning%20with%20Torch.ipynb
+require('torch')
+require('nn')
+local dataset = require('load_data')
 
-require 'torch'
-require 'nn'
-require 'load_data'
+
+-- Load data
+dataset.download()
+local trainset = dataset.load_train()
+local testset  = dataset.load_test()
+
+
+print('Training Data:')
+print(trainset)
+print()
+
+print('Test Data:')
+print(testset)
+print()
+
 
 -- Declare the network using nn modules
-net = nn.Sequential()
+local net = nn.Sequential()
 net:add(nn.Linear(785,256))
 net:add(nn.Linear(256, 10)) --10 output for the classifier
 net:add(nn.LogSoftMax())     -- Log-probability output 
 
-input  = torch.rand(1, 785)
-output = net:forward(input)
+local input  = torch.rand(1, 785)
+local output = net:forward(input)
 print(output)
 
 
 -- Loss criterion
-criterion = nn.ClassNLLCriterion() -- Negative log-likelihood criterion
+local criterion = nn.ClassNLLCriterion() -- Negative log-likelihood criterion
 criterion:forward(output, 3)
-gradients = criterion:backward(output, 3)
+local gradients = criterion:backward(output, 3)
 
 gradInput = net:backward(input, gradients)
 
 
--- Load data and normalize
-trainset = mnist.loadTrainSet()
