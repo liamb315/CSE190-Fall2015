@@ -14,7 +14,7 @@ local opt = {learn_rate       = 0.001,
 dataset.download()
 local trainset = dataset.load_train()
 local testset  = dataset.load_test()
-local classes = {'1','2','3','4','5','6','7','8','9','10'}
+local classes = {'0','1','2','3','4','5','6','7','8','9'}
 
 -- Prepare dataset for use with nn.StochasticGradient
 setmetatable(trainset, 
