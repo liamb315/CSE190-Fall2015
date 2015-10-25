@@ -3,12 +3,33 @@ require('torch')
 require('nn')
 local dataset = require('load_data')
 
+-- Set some options for the training
+local opt = {learn_rate       = 0.001,
+			 learn_rate_decay = 0.9,
+			 max_iter         = 10
+			}
+
 
 -- Load data
 dataset.download()
 local trainset = dataset.load_train()
 local testset  = dataset.load_test()
+local classes = {'1','2','3','4','5','6','7','8','9','10'}
 
+-- Prepare dataset for use with nn.StochasticGradient
+setmetatable(trainset, 
+    {__index = function(t, i) 
+                    return {t.data[i], t.labels[i]} 
+                end}
+	);
+
+-- convert the data from a ByteTensor to a DoubleTensor.
+trainset.data = trainset.data:double() 
+testset.data  = testset.data:double() 
+
+function trainset:size() 
+    return self.data:size(1) 
+end
 
 print('Training Data:')
 print(trainset)
@@ -19,22 +40,35 @@ print(testset)
 print()
 
 
+local mean = {}
+local std  = {}
+mean[1]     = trainset.data[{ {}, {1}, {}, {}}]:mean()
+trainset.data[{ {}, {1}, {}, {}}]:add(-mean[1])
+std[1]     = trainset.data[{ {}, {1}, {}, {}}]:std()
+trainset.data[{ {}, {1}, {}, {}}]:add(-std[1])
+
+
 -- Declare the network using nn modules
 local net = nn.Sequential()
-net:add(nn.Linear(785,256))
+net:add(nn.Reshape(1024))
+net:add(nn.Linear(1024,256))
 net:add(nn.Linear(256, 10)) --10 output for the classifier
 net:add(nn.LogSoftMax())     -- Log-probability output 
 
-local input  = torch.rand(1, 785)
-local output = net:forward(input)
-print(output)
-
-
 -- Loss criterion
 local criterion = nn.ClassNLLCriterion() -- Negative log-likelihood criterion
-criterion:forward(output, 3)
-local gradients = criterion:backward(output, 3)
 
-gradInput = net:backward(input, gradients)
+-- Train the neural network via stochastic gradient descent
+local trainer = nn.StochasticGradient(net, criterion)
+trainer.learningRate      = opt.learn_rate
+trainer.learningRateDecay = opt.learn_rate_decay
+trainer.maxIteration      = opt.max_iter
+trainer:train(trainset)
+
+
+
+
+
+
 
 
