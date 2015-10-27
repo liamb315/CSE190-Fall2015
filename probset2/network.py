@@ -47,15 +47,6 @@ class network:
 		return grad_w, grad_b
 
 
-	def error(self):
-		'''Loss for the network '''
-		pass
-
-
-	def error_derivative(self):
-		pass
-
-
 
 def sigmoid(a):
 	return 1.0/(1.0 + np.exp(-a))
