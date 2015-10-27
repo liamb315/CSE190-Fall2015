@@ -20,8 +20,13 @@ class network:
 		self.z[0] = x
 		for l in range(0, len(self.weights)):
 			self.a[l+1] = np.dot(self.weights[l], x)
+			#print 'x before'
+			#print x
 			x = sigmoid(np.dot(self.weights[l], x))
+			#print 'x after'
+			#print x
 			self.z[l+1] = x
+		print 'result:'
 		return x
 	
 
@@ -36,7 +41,7 @@ class network:
 		grad_w[N-2] = np.dot(delta[N-1], self.z[N-2].T)
 		
 		# Compute delta for hidden layers
-		for l in range(N-2, -1, -1):
+		for l in range(N-2, 0, -1):
 			delta[l]    = np.dot(self.weights[l].T, delta[l+1]) * sigmoid_derivative(self.a[l])
 			grad_w[l-1] = np.dot(delta[l], self.z[l-1].T)
 		return grad_w
