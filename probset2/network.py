@@ -1,9 +1,6 @@
 import numpy as np
 import random as r
 
-
-
-
 class network:
 	'''Class for a neural network'''	
 	def __init__(self, topology):
@@ -23,7 +20,6 @@ class network:
 			self.a[l+1] = np.dot(self.weights[l], x) + self.biases[l]
 			x = sigmoid(np.dot(self.weights[l], x) + self.biases[l])
 			self.z[l+1] = x
-		print 'result:'
 		return x
 	
 
@@ -46,6 +42,25 @@ class network:
 			grad_b[l-1] = delta[l]
 		return grad_w, grad_b
 
+
+	def test_network(self, x, t):
+		'''Test the performance of the network given the current parameters'''
+		correct = 0
+		total   = 0
+		for i in range(0, len(x)):
+			correct += (np.argmax(self.forward(x[i])) == t[i])
+			total   += 1
+		return float(correct)/float(total) 
+
+
+	def update_weights(self, W):
+		'''Update weights of network'''
+		self.weights = W
+
+
+	def update_biases(self, b):
+		'''Update biases of network'''
+		self.biases = b
 
 
 def sigmoid(a):
