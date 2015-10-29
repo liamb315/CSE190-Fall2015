@@ -23,33 +23,27 @@ class optimization:
 			N  = int(len(x)/self.batch_size)*self.batch_size  # Ensure batches divide evenly
 			
 			for j in xrange(0, N, self.batch_size):
-				W      = [np.zeros(w.shape) for w in self.network.weights]
-				b      = [np.zeros(b.shape) for b in self.network.biases ]
-
 				x_batch = x_rand[j:j+self.batch_size]
 				t_batch = t_rand[j:j+self.batch_size]
 
-				grad_W, grad_b = self.calculate_gradient_batch(x_batch, t_batch)
+				grad_W, grad_b = self.calculate_gradient(x_batch, t_batch)
 
-				W = [(w - eta * g_w) for w, g_w in zip(W, grad_W)]
-				b = [(b - eta * g_b) for b, g_b in zip(b, grad_b)]
+				W = [(w - eta * g_w) for w, g_w in zip(self.network.weights, grad_W)]
+				b = [(b - eta * g_b) for b, g_b in zip(self.network.biases, grad_b)]
 
 				self.network.update_weights(W)
 				self.network.update_biases(b)
 
 				print ' batch accuracy', self.network.network_accuracy(x_batch, t_batch)
+				print ' batch loss', self.total_cross_entropy_loss(x_batch, t_batch)
 			
 			
-
-	def calculate_gradient_batch(self, x, t):
+	def calculate_gradient(self, x, t):
 		'''Calculate the gradients for a set of examples'''
 		assert len(x) == len(t)
 
-		weights = self.network.weights
-		biases  = self.network.biases
-
-		grad_w = [np.zeros(w.shape) for w in weights]
-		grad_b = [np.zeros(b.shape) for b in biases]
+		grad_w = [np.zeros(w.shape) for w in self.network.weights]
+		grad_b = [np.zeros(b.shape) for b in self.network.biases ]
 
 		for i in xrange(len(x)):
 			_ = self.network.forward(x[i]) # Forward prop for activations
@@ -60,9 +54,39 @@ class optimization:
 
 		return grad_w, grad_b
 
+
+	def total_cross_entropy_loss(self, x, t):
+		'''Calculate loss for examples x and targets t'''
+		loss = 0.0
+		for i in xrange(len(x)):
+			y = self.network.forward(x[i])
+			loss += self.cross_entropy_loss(y, t[i])
+		return loss
+
 	def cross_entropy_loss(self, y, t):
 		'''Calculate loss for output y and target t'''
-		return np.sum(np.nan_to_num(-y*np.log(y)) - (1-y)*np.log(1-y))
+		return np.sum(np.nan_to_num(-t*np.log(y) - (1-t)*np.log(1-y)))
+
+
+	def check_gradient(self, x, t):
+		'''Gradient checking
+		epsilon = 1E-5
+
+		approx_grad_w = [np.zeros(w.shape) for w in self.network.weights]
+		approx_grad_b = [np.zeros(b.shape) for b in self.network.biases ]
+		
+		# Gradient calculation		
+		grad_w, grad_b = self.calculate_gradient(x, t)
+
+		error_plus  = self.total_cross_entropy_loss(epsilon, x, t)
+		error_minus = self.total_cross_entropy_loss(-epsilon, x, t)
+
+		approx_grad_w = [error_plus - error_minus]/ (2 * epsilon)
+		'''
+
+
+
+
 
 def shuffle_in_place(a, b):
 	assert len(a) == len(b)

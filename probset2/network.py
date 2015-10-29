@@ -6,7 +6,7 @@ class network:
 	def __init__(self, topology):
 		self.topology   = topology
 		self.num_layers = len(topology)
-		self.weights    = [np.random.randn(y,x) for x,y in zip(topology[:-1], topology[1:])] 
+		self.weights    = [np.random.randn(y,x)/np.sqrt(x) for x,y in zip(topology[:-1], topology[1:])] 
 		self.biases     = [np.random.randn(y, 1) for y in topology[1:]]
 		self.a          = [np.zeros(l) for l in topology]
 		self.z          = [np.zeros(l) for l in topology]
@@ -21,7 +21,7 @@ class network:
 			x = sigmoid(np.dot(self.weights[l], x) + self.biases[l])
 			self.z[l+1] = x
 		return x
-	
+
 
 	def backward(self, x, t):
 		'''Backward propagation'''

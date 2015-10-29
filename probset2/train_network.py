@@ -32,10 +32,10 @@ t_test  = [vectorized_result(t) for t in t_test]
 t_test  = np.asarray(t_test)
 
 # Training options
-options = {'learn_rate':0.01, 'learn_rate_dec': 0.9, 'batch_size': 256, 'epochs': 10, 'criterion': 'cross_entropy'}
+options = {'learn_rate':0.0005, 'learn_rate_dec': 0.9, 'batch_size': 256, 'epochs': 10, 'criterion': 'cross_entropy'}
 
 # Fully-connected neural network
-topology = [784, 256, 10]
+topology = [784, 30, 10]
 net = nn.network(topology)
 
 # Train model 
