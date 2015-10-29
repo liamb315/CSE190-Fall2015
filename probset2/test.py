@@ -2,11 +2,11 @@ import numpy as np
 import network as nn
 
 # Data example
-x = np.array([[1,1]]).T
-t = 1.0
+x = np.array([[0,1,1,0],[0.2,0.9,1.2,0.1]]).T
+t = np.array([[1,1], [1,1]]).T
 
 # Establish a network
-net = nn.network([2,3,5,1])
+net = nn.network([4,3,5,2])
 
 
 print net.forward(x)

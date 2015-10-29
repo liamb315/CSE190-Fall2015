@@ -16,7 +16,7 @@ class network:
 		'''Forward propagation'''
 		self.a[0] = x
 		self.z[0] = x
-		for l in range(0, len(self.weights)):
+		for l in xrange(len(self.weights)):
 			self.a[l+1] = np.dot(self.weights[l], x) + self.biases[l]
 			x = sigmoid(np.dot(self.weights[l], x) + self.biases[l])
 			self.z[l+1] = x
@@ -43,12 +43,15 @@ class network:
 		return grad_w, grad_b
 
 
-	def test_network(self, x, t):
-		'''Test the performance of the network given the current parameters'''
+	def network_accuracy(self, x, t):
+		'''Compute accuracy of the network for current parameters'''
+		assert len(x) == len(t)
 		correct = 0
 		total   = 0
-		for i in range(0, len(x)):
-			correct += (np.argmax(self.forward(x[i])) == t[i])
+		for i in xrange(len(x)):
+			pred    = np.argmax(self.forward(x[i]))
+			act     = np.nonzero(t[i])[0][0]
+			correct += int(pred == act)
 			total   += 1
 		return float(correct)/float(total) 
 
