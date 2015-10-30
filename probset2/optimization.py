@@ -54,6 +54,24 @@ class optimization:
 
 		return grad_w, grad_b
 
+	'''
+	def calculate_gradient_fast(self, x, t):
+		'''Calculate the gradients for a set of examples'''
+		assert len(x) == len(t)
+
+		grad_w = [np.zeros(w.shape) for w in self.network.weights]
+		grad_b = [np.zeros(b.shape) for b in self.network.biases ]
+
+
+		for i in xrange(len(x)):
+			_ = self.network.forward(x[i]) # Forward prop for activations
+			delta_grad_w, delta_grad_b = self.network.backward(x[i], t[i]) # Backward prop for gradients
+
+			grad_w = [g_w + d_gw for g_w, d_gw in zip(grad_w, delta_grad_w)]
+			grad_b = [g_b + d_gb for g_b, d_gb in zip(grad_b, delta_grad_b)]
+
+		return grad_w, grad_b
+	'''
 
 	def total_cross_entropy_loss(self, x, t):
 		'''Calculate loss for examples x and targets t'''
