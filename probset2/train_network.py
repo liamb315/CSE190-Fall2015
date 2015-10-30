@@ -35,7 +35,7 @@ t_test  = np.asarray(t_test)
 options = {'learn_rate':0.0005, 'learn_rate_dec': 0.9, 'batch_size': 256, 'epochs': 10, 'criterion': 'cross_entropy'}
 
 # Fully-connected neural network
-topology = [784, 30, 10]
+topology = [784, 50,50, 10]
 net = nn.network(topology)
 
 # Train model 

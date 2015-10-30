@@ -34,8 +34,8 @@ class optimization:
 				self.network.update_weights(W)
 				self.network.update_biases(b)
 
-				print ' batch accuracy', self.network.network_accuracy(x_batch, t_batch)
-				print ' batch loss', self.total_cross_entropy_loss(x_batch, t_batch)
+				print ' accuracy', self.network.network_accuracy(x_batch, t_batch)
+				print ' loss', self.total_cross_entropy_loss(x_batch, t_batch)
 			
 			
 	def calculate_gradient(self, x, t):
